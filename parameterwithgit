@@ -1,0 +1,29 @@
+pipeline {
+   agent any
+   parameters {
+     string(name: 'ITEMS', defaultValue: 'one,two,three,four,five', description: 'Comma-separated list of items')
+     }
+    stages {
+      stage('Loop Over Items') {
+        steps {
+          script {
+            def items = params.ITEMS.split(',')
+            for (def i = 0; i < items.size(); i++) {
+              def currentItem = input(
+                id: "itemInput${i}",
+                message: "Do you want to process item ${i + 1}? (${items[i]})",
+                parameters: [
+             booleanParam(name: 'PROCESS_ITEM', defaultValue: false, description: 'Process this item?')
+                ]
+              )
+            if (currentItem) {
+               sh "echo Processing item ${i + 1}: ${items[i]}"
+              } else {
+                echo "Skipping item ${i + 1}: ${items[i]}"
+              }
+            }
+         }
+       }
+    }
+  }
+}
