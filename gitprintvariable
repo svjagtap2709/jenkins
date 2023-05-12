@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+
+    environment {
+      var_email = "abc@xyz.com"
+    }
+
+    stages {
+       stage("Print build number and current login username") {
+         steps {
+            echo "Build Number: ${BUILD_NUMBER}"
+            sh "whoami"
+         }
+       }
+    }
+}
